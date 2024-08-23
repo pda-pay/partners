@@ -7,7 +7,8 @@ assignees: ''
 
 ---
 
-## ⛔️ Issue - ex) 결제 로직을 개발함.
+## ⛔️ Issue
+- ex) 결제 로직을 개발함.
 - ex) 결제 로직 중 어떤 부분이 잘못돼서 고치려고 함.
 
 ## 📌 Related Issue
