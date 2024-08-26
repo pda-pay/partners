@@ -26,13 +26,6 @@ public class SecuritiesService {
 
     private String accessToken = null;
 
-//    public ClosePriceDTO getPreviousClosePrice(String code) {
-//
-//        checkoutToken();
-//
-//        return stockData.fetchClosePriceData(code, accessToken);
-//    }
-
     private CurrentPriceDTO getCurrentPrice(String code) {
 
         checkoutToken();
