@@ -33,5 +33,7 @@ jobs:
           export DATASOURCE_NAME=${{ secrets.DATASOURCE_NAME }}
           export DATASOURCE_USERNAME=${{ secrets.DATASOURCE_USERNAME }}
           export DATASOURCE_PASSWORD=${{ secrets.DATASOURCE_PASSWORD }}
+          export APP_KEY=${{ secrets.APP_KEY }}
+          export APP_SECRET=${{ secrets.APP_SECRET }}
           nohup java -jar /home/ubuntu/total-0.0.1-SNAPSHOT.jar > /dev/null 2>&1 &
         EOF
