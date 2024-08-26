@@ -2,9 +2,11 @@ package com.partners.total.mydata.domain;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 @Entity
 @Table(name = "User")
 public class User {

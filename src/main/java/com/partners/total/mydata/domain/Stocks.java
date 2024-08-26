@@ -2,7 +2,9 @@ package com.partners.total.mydata.domain;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "Stocks")
 public class Stocks {
