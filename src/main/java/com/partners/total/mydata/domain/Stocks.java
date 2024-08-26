@@ -9,6 +9,13 @@ import lombok.Getter;
 @Table(name = "Stocks")
 public class Stocks {
     public Stocks() {}
+
+    public Stocks(int quantity, Account account, String stockCode) {
+        this.quantity = quantity;
+        this.account = account;
+        this.stockCode = stockCode;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -16,5 +23,6 @@ public class Stocks {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
+    @Column(name = "stock_code")
     private String stockCode;
 }
