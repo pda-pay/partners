@@ -40,12 +40,10 @@ public class MydataResponse {
 
     @Getter
     public static class StocksResponse {
-        private final int id;
         private final int quantity;
         private final String stockCode;
 
         public StocksResponse(Stocks stocks) {
-            this.id = stocks.getId();
             this.quantity = stocks.getQuantity();
             this.stockCode = stocks.getStockCode();
         }
