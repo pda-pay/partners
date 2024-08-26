@@ -1,10 +1,8 @@
 package com.partners.total.securities.web;
 
 import com.partners.total.mydata.domain.Stocks;
-import com.partners.total.securities.dto.CurrentPriceDTO;
 import com.partners.total.securities.dto.StockCodesDTO;
 import com.partners.total.securities.dto.StockPriorityDTO;
-import com.partners.total.securities.dto.StocksDTO;
 import com.partners.total.securities.service.SecuritiesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
