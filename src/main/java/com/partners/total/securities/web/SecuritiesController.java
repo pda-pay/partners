@@ -59,12 +59,17 @@ public class SecuritiesController {
     @Operation(summary = "증권 전일 종가 요청", description = "주식 코드 리스트를 받아서 그에 대한 전일 종가를 반환합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "증권 전일 종가 성공"),
+            @ApiResponse(responseCode = "204", description = "반환 데이터가 비어 있음"),
             @ApiResponse(responseCode = "400", description = "증권 전일 종가 실패")
     })
-    @GetMapping("/stocks")
+    @PostMapping("/stocks")
     public ResponseEntity<?> getPreviousClosePrice(@RequestBody StockCodesDTO stockCodesDTO) {
 
         PreviousPricesDTO previousPricesDTO = securitiesService.getPreviousClosePriceList(stockCodesDTO);
+
+        if (previousPricesDTO.getPreviousPricesDTO().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
 
         return new ResponseEntity<>(previousPricesDTO, HttpStatus.OK);
     }
