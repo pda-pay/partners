@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class AccountDepositRequest {
-    @Schema(description = "계좌번호 고유 ID(계좌번호가 아님)", example = "7")
-    private final int accountId;
+    @Schema(description = "계좌번호", example = "125-0369-73009")
+    private final String accountNumber;
     @Schema(description = "증감할 금액", example = "100000")
     private final int value;
 }
