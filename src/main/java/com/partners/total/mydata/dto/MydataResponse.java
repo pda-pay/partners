@@ -19,7 +19,6 @@ public class MydataResponse {
 
     @Getter
     public static class AccountResponse {
-        private final int id;
         private final String accountNumber;
         private final int deposit;
         private final String companyCode;
@@ -27,7 +26,6 @@ public class MydataResponse {
         private final List<StocksResponse> stocks;
 
         public AccountResponse(Account account) {
-            this.id = account.getId();
             this.accountNumber = account.getAccountNumber();
             this.deposit = account.getDeposit();
             this.companyCode = account.getCompanyCode();
