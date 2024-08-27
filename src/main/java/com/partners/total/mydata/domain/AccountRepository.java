@@ -13,6 +13,8 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     @Query("SELECT a.deposit FROM Account a WHERE a.accountNumber = :accountNumber")
     Optional<Integer> findDepositByAccountNumber(@Param("accountNumber") String accountNumber);
+    
+    Optional<Account> findAccountByAccountNumber(String accountNumber);
 
     @Modifying
     @Query("UPDATE Account a SET a.deposit = :deposit WHERE a.accountNumber = :accountNumber")
