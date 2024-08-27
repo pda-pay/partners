@@ -3,6 +3,8 @@ package com.partners.total.securities.utils;
 import com.partners.total.securities.dto.ClosePriceDTO;
 import com.partners.total.securities.dto.CurrentPriceDTO;
 import com.partners.total.securities.config.WebClientConfig;
+import com.partners.total.securities.exception.openapi.OpenAPICurrentPriceException;
+import com.partners.total.securities.exception.openapi.OpenAPIPreviousClosePriceException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -54,8 +56,7 @@ public class StockData {
                     .retrieve()
                     .bodyToMono(ClosePriceDTO.class)
                     .onErrorResume(e -> {
-                        System.err.println("전일 종가 가져오기 에러 = " + e.getMessage());
-                        return Mono.empty();
+                        throw new OpenAPIPreviousClosePriceException("전일 종가 가져오기 에러");
                     })
                     .block();
 
@@ -100,8 +101,7 @@ public class StockData {
                     .retrieve()
                     .bodyToMono(CurrentPriceDTO.class)
                     .onErrorResume(e -> {
-                        System.err.println("현재가 가져오기 에러 = " + e.getMessage());
-                        return Mono.empty();
+                        throw new OpenAPICurrentPriceException("현재가 가져오기 에러");
                     })
                     .block();
 

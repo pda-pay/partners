@@ -1,6 +1,8 @@
 package com.partners.total.securities.web;
 
 import com.partners.total.mydata.domain.Stocks;
+import com.partners.total.securities.dto.AllStocksRequestDTO;
+import com.partners.total.securities.dto.PreviousPricesDTO;
 import com.partners.total.securities.dto.StockCodesDTO;
 import com.partners.total.securities.dto.StockPriorityDTO;
 import com.partners.total.securities.service.SecuritiesService;
@@ -30,13 +32,13 @@ public class SecuritiesController {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
             @ApiResponse(responseCode = "404", description = "조회 실패")
     })
-    @GetMapping("/accounts/stock/{accountId}")
+    @GetMapping("/accounts/stocks/{accountNumber}")
     public ResponseEntity<?> getAllAccounts(
-            @Parameter(description = "조회할 계좌의 id", required = true)
-            @PathVariable int accountId
+            @Parameter(description = "조회할 계좌의 번호", required = true)
+            @PathVariable String accountNumber
     ) {
 
-        List<Stocks> stocks = securitiesService.getAllStocksByAccountId(accountId);
+        List<AllStocksRequestDTO> stocks = securitiesService.getAllStocksByAccountNumber(accountNumber);
 
         return new ResponseEntity<>(stocks, HttpStatus.OK);
     }
@@ -46,10 +48,8 @@ public class SecuritiesController {
             @ApiResponse(responseCode = "200", description = "매도 요청 성공"),
             @ApiResponse(responseCode = "400", description = "매도 요청 실패")
     })
-    @PutMapping("/stocks")
-    public ResponseEntity<?> requestSellStocks(
-            @RequestBody StockPriorityDTO stockPriorityDTO
-    ) {
+    @PutMapping("/accounts/stocks")
+    public ResponseEntity<?> requestSellStocks(@RequestBody StockPriorityDTO stockPriorityDTO) {
 
         Map<String, ?> amount = securitiesService.requestSellStocks(stockPriorityDTO);
 
@@ -57,11 +57,15 @@ public class SecuritiesController {
     }
 
     @Operation(summary = "증권 전일 종가 요청", description = "주식 코드 리스트를 받아서 그에 대한 전일 종가를 반환합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "증권 전일 종가 성공"),
+            @ApiResponse(responseCode = "400", description = "증권 전일 종가 실패")
+    })
     @GetMapping("/stocks")
     public ResponseEntity<?> getPreviousClosePrice(@RequestBody StockCodesDTO stockCodesDTO) {
 
-        Map<String, String> previousClosePriceList = securitiesService.getPreviousClosePriceList(stockCodesDTO);
+        PreviousPricesDTO previousPricesDTO = securitiesService.getPreviousClosePriceList(stockCodesDTO);
 
-        return new ResponseEntity<>(previousClosePriceList, HttpStatus.OK);
+        return new ResponseEntity<>(previousPricesDTO, HttpStatus.OK);
     }
 }

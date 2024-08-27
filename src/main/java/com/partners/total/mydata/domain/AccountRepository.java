@@ -17,4 +17,6 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Modifying
     @Query("UPDATE Account a SET a.deposit = :deposit WHERE a.id = :id")
     Optional<Integer> updateDepositById(@Param("id") Integer id, @Param("deposit") Integer deposit);
+
+    Optional<Account> findAccountByAccountNumber(String accountNumber);
 }
