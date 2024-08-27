@@ -25,4 +25,9 @@ public class Stocks {
     private Account account;
     @Column(name = "stock_code")
     private String stockCode;
+
+    public void minusQuantity(int removeQuantity) {
+
+        this.quantity -= removeQuantity;
+    }
 }
