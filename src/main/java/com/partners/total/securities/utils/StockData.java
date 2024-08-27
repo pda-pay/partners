@@ -3,6 +3,7 @@ package com.partners.total.securities.utils;
 import com.partners.total.securities.dto.ClosePriceDTO;
 import com.partners.total.securities.dto.CurrentPriceDTO;
 import com.partners.total.securities.config.WebClientConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,13 +17,15 @@ import java.time.format.DateTimeFormatter;
 public class StockData {
 
     private final WebClient webClient;
-    private final String appkey;
-    private final String appsecret;
+
+    @Value("${app.key}")
+    private String appkey;
+
+    @Value("${app.secret}")
+    private String appsecret;
 
     public StockData(WebClientConfig webClientConfig) {
         this.webClient = webClientConfig.webClient();
-        this.appkey = webClientConfig.getAppkey();
-        this.appsecret = webClientConfig.getAppsecret();
     }
 
     public synchronized ClosePriceDTO fetchClosePriceData(String code, String accessToken) {
