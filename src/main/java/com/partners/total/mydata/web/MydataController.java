@@ -38,14 +38,14 @@ public class MydataController {
         return ResponseEntity.status(HttpStatus.OK).body(accountResponse);
     }
 
-    @Operation(summary = "계좌 잔액 조회", description = "계좌 잔액을 조회합니다.")
+    @Operation(summary = "계좌 잔액 조회", description = "계좌 번호로 계좌 잔액을 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공"),
             @ApiResponse(responseCode = "404", description = "계좌를 찾지 못함")
     })
     @PostMapping(value="/mydata/accounts/deposits")
     public ResponseEntity<DepositResponse> getDepositByAccountId(@RequestBody DepositRequest depositRequest) {
-        DepositResponse depositResponse = mydataService.getDepositByAccountId(depositRequest);
+        DepositResponse depositResponse = mydataService.getDepositByAccountNumber(depositRequest);
         return ResponseEntity.status(HttpStatus.OK).body(depositResponse);
     }
 
