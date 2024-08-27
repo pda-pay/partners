@@ -6,6 +6,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 public class DepositRequest {
-    @Schema(description = "계좌번호 고유 ID(계좌번호가 아님)", example = "7")
-    private int accountId;
+    @Schema(description = "계좌번호", example = "125-0369-73009")
+    private String accountNumber;
 }
