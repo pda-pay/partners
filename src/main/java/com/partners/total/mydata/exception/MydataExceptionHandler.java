@@ -30,7 +30,7 @@ public class MydataExceptionHandler {
     @ExceptionHandler(value = InsufficientBalanceException.class)
     public AccountWithdrawResponse handleDwpNotMatchException(InsufficientBalanceException exception) {
         log.info("exception class : {}", exception.getClass());
-        return new AccountWithdrawResponse(exception.getAccountId(), exception.getDeposit());
+        return new AccountWithdrawResponse(exception.getAccountNumber(), exception.getDeposit());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
