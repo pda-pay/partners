@@ -48,15 +48,11 @@ public class SecuritiesService {
             return null;
         }
 
-        System.out.println("stocks.getQuantity() = " + stocks.getQuantity());
-
         int currentPriceOfStock = Integer.parseInt(getCurrentPrice(stockPriorityDTO.getStockCode()).getOutput().getStck_prpr());
 
         int sellAmount = stockPriorityDTO.getQuantity() * currentPriceOfStock;
 
         int restQuantity = stocks.getQuantity() - stockPriorityDTO.getQuantity();
-
-        System.out.println("restQuantity = " + restQuantity);
 
         stocksRepository
                 .updateQuantityByAccountIdAndQuantity(stocks.getId(), restQuantity)
