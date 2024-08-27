@@ -11,12 +11,12 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, Integer> {
     List<Account> findByUser(User user);
 
-    @Query("SELECT a.deposit FROM Account a WHERE a.id = :id")
-    Optional<Integer> findDepositById(@Param("id") Integer id);
+    @Query("SELECT a.deposit FROM Account a WHERE a.accountNumber = :accountNumber")
+    Optional<Integer> findDepositByAccountNumber(@Param("accountNumber") String accountNumber);
+    
+    Optional<Account> findAccountByAccountNumber(String accountNumber);
 
     @Modifying
-    @Query("UPDATE Account a SET a.deposit = :deposit WHERE a.id = :id")
-    Optional<Integer> updateDepositById(@Param("id") Integer id, @Param("deposit") Integer deposit);
-
-    Optional<Account> findAccountByAccountNumber(String accountNumber);
+    @Query("UPDATE Account a SET a.deposit = :deposit WHERE a.accountNumber = :accountNumber")
+    Optional<Integer> updateDepositByAccountNumber(@Param("accountNumber") String accountNumber, @Param("deposit") Integer deposit);
 }

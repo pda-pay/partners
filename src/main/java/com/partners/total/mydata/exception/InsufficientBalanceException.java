@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class InsufficientBalanceException extends RuntimeException {
-    private final int accountId;
+    private final String accountNumber;
     private final int deposit;
-    public InsufficientBalanceException(String message, int accountId, int deposit) {
+    public InsufficientBalanceException(String message, String accountNumber, int deposit) {
         super(message);
-        this.accountId = accountId;
+        this.accountNumber = accountNumber;
         this.deposit = deposit;
     }
 }
