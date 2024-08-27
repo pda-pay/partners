@@ -3,6 +3,7 @@ package com.partners.total.securities.utils;
 import com.partners.total.securities.config.WebClientConfig;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -11,13 +12,15 @@ import reactor.core.publisher.Mono;
 public class StockOAuth {
 
     private final WebClient webClient;
-    private final String appkey;
-    private final String appsecret;
+
+    @Value("${app.key}")
+    private String appkey;
+
+    @Value("${app.secret}")
+    private String appsecret;
 
     public StockOAuth(WebClientConfig webClientConfig) {
         this.webClient = webClientConfig.webClient();
-        this.appkey = webClientConfig.getAppkey();
-        this.appsecret = webClientConfig.getAppsecret();
     }
 
     public synchronized String fetchOAuthToken() {
@@ -43,7 +46,6 @@ public class StockOAuth {
 
             accessToken = response.getAccessToken(); // 토큰을 전역 변수에 저장
 
-            System.out.println("accessToken = " + accessToken);
         } catch (Exception e) {
             e.printStackTrace();
             accessToken = null;
