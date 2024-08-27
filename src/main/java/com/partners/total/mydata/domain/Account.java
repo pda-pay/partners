@@ -21,6 +21,7 @@ public class Account {
         this.companyCode = companyCode;
         this.category = category;
     }
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
