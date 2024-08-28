@@ -50,6 +50,13 @@ jobs:
         chmod 600 ssh_key.pem
         scp -i ssh_key.pem -o StrictHostKeyChecking=no ./build/libs/total-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/ubuntu/
         ssh -i ssh_key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+
+          PID=$(pgrep -f 'total-0.0.1-SNAPSHOT.jar')
+          if [ -n "$PID" ]; then
+            echo "Stopping existing application with PID: $PID"
+            kill -9 $PID
+          fi
+
           export DATASOURCE_ENDPOINT="${DATASOURCE_ENDPOINT}"
           export DATASOURCE_PORT="${DATASOURCE_PORT}"
           export DATASOURCE_NAME="${DATASOURCE_NAME}"
@@ -57,5 +64,7 @@ jobs:
           export DATASOURCE_PASSWORD="${DATASOURCE_PASSWORD}"
           export APP_KEY="${APP_KEY}"
           export APP_SECRET="${APP_SECRET}"
+
           nohup java -jar /home/ubuntu/total-0.0.1-SNAPSHOT.jar > /dev/null 2>&1 &
+          echo "New application started"
         EOF
