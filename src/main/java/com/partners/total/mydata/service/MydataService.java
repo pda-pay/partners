@@ -99,24 +99,27 @@ public class MydataService {
 
         String fakeAccountNumber = generateRandomAccountNumber();
         int fakeDeposit = generateRandomDeposit();
+        String fakeCompanyCode = generateRandomCompanyCode();
         String fakeCategory = "01";
 
-        Account firstAccount = new Account(fakeAccountNumber, fakeDeposit, user, fakeCategory);
+        Account firstAccount = new Account(fakeAccountNumber, fakeDeposit, user, fakeCompanyCode, fakeCategory);
         accounts.add(firstAccount);
 
         fakeAccountNumber = generateRandomAccountNumber();
         fakeDeposit = generateRandomDeposit();
+        fakeCompanyCode = generateRandomCompanyCode();
         fakeCategory = "02";
 
-        Account secondAccount = new Account(fakeAccountNumber, fakeDeposit, user, fakeCategory);
+        Account secondAccount = new Account(fakeAccountNumber, fakeDeposit, user, fakeCompanyCode, fakeCategory);
         accounts.add(secondAccount);
 
         for (int i = 2; i < numberOfAccounts; i++) {
             fakeAccountNumber = generateRandomAccountNumber();
             fakeDeposit = generateRandomDeposit();
+            fakeCompanyCode = generateRandomCompanyCode();
             fakeCategory = generateRandomCategory();
 
-            Account fakeAccount = new Account(fakeAccountNumber, fakeDeposit, user, fakeCategory);
+            Account fakeAccount = new Account(fakeAccountNumber, fakeDeposit, user, fakeCompanyCode, fakeCategory);
             accounts.add(fakeAccount);
         }
 
@@ -130,6 +133,11 @@ public class MydataService {
         String thirdPart = String.format("%05d", random.nextInt(100000));
 
         return firstPart + "-" + secondPart + "-" + thirdPart;
+    }
+
+    private String generateRandomCompanyCode() {
+        int code = random.nextInt(5) + 1;
+        return String.format("%02d", code);
     }
 
     private int generateRandomDeposit() {

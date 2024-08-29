@@ -14,10 +14,11 @@ import java.util.List;
 public class Account {
     public Account() {}
 
-    public Account(String accountNumber, int deposit, User user, String category) {
+    public Account(String accountNumber, int deposit, User user, String companyCode, String category) {
         this.accountNumber = accountNumber;
         this.deposit = deposit;
         this.user = user;
+        this.companyCode = companyCode;
         this.category = category;
     }
     @JsonIgnore
@@ -31,6 +32,8 @@ public class Account {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @Column(name = "company_code")
+    private String companyCode;
     private String category;
 
     @Setter
