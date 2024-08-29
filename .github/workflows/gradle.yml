@@ -1,5 +1,4 @@
 name: Java CI with Gradle
-
 on:
   push:
     branches:
@@ -7,21 +6,17 @@ on:
   pull_request:
     branches:
       - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
-
     - name: Cache Gradle packages
       uses: actions/cache@v2
       with:
@@ -29,10 +24,8 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
-
     - name: Build with Gradle (without tests)
       run: ./gradlew build -x test --console=plain
-
     - name: Deploy to EC2 using SSH
       env:
         EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
@@ -46,16 +39,22 @@ jobs:
         APP_KEY: ${{ secrets.APP_KEY }}
         APP_SECRET: ${{ secrets.APP_SECRET }}
       run: |
-        echo "${{ secrets.EC2_SSH_KEY }}" > ssh_key.pem
+        echo "$EC2_SSH_KEY" > ssh_key.pem
         chmod 600 ssh_key.pem
-        scp -i ssh_key.pem -o StrictHostKeyChecking=no ./build/libs/total-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/ubuntu/
-        ssh -i ssh_key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-          export DATASOURCE_ENDPOINT="${DATASOURCE_ENDPOINT}"
-          export DATASOURCE_PORT="${DATASOURCE_PORT}"
-          export DATASOURCE_NAME="${DATASOURCE_NAME}"
-          export DATASOURCE_USERNAME="${DATASOURCE_USERNAME}"
-          export DATASOURCE_PASSWORD="${DATASOURCE_PASSWORD}"
-          export APP_KEY="${APP_KEY}"
-          export APP_SECRET="${APP_SECRET}"
-          nohup java -jar /home/ubuntu/total-0.0.1-SNAPSHOT.jar > /dev/null 2>&1 &
+        scp -i ssh_key.pem -o StrictHostKeyChecking=no ./build/libs/total-0.0.1-SNAPSHOT.jar $EC2_USERNAME@$EC2_HOST:/home/ubuntu/
+        ssh -i ssh_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST << EOF
+          PID=\$(pgrep -f 'total-0.0.1-SNAPSHOT.jar')
+          if [ -n "\$PID" ]; then
+            echo "Stopping existing application with PID: \$PID"
+            kill -9 \$PID
+          fi
+          export DATASOURCE_ENDPOINT=$DATASOURCE_ENDPOINT
+          export DATASOURCE_PORT=$DATASOURCE_PORT
+          export DATASOURCE_NAME=$DATASOURCE_NAME
+          export DATASOURCE_USERNAME=$DATASOURCE_USERNAME
+          export DATASOURCE_PASSWORD=$DATASOURCE_PASSWORD
+          export APP_KEY=$APP_KEY
+          export APP_SECRET=$APP_SECRET
+          nohup java -jar /home/ubuntu/total-0.0.1-SNAPSHOT.jar > /home/ubuntu/app.log 2>&1 &
+          echo "Application started. Check /home/ubuntu/app.log for details."
         EOF
