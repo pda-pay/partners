@@ -21,12 +21,14 @@ public class MydataResponse {
     public static class AccountResponse {
         private final String accountNumber;
         private final int deposit;
+        private final String companyCode;
         private final String category;
         private final List<StocksResponse> stocks;
 
         public AccountResponse(Account account) {
             this.accountNumber = account.getAccountNumber();
             this.deposit = account.getDeposit();
+            this.companyCode = account.getCompanyCode();
             this.category = account.getCategory();
             this.stocks = account.getStocksList().stream()
                     .map(StocksResponse::new)
