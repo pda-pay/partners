@@ -1,6 +1,5 @@
 package com.partners.total.securities.web;
 
-import com.partners.total.mydata.domain.Stocks;
 import com.partners.total.securities.dto.AllStocksRequestDTO;
 import com.partners.total.securities.dto.PreviousPricesDTO;
 import com.partners.total.securities.dto.StockCodesDTO;
@@ -32,12 +31,11 @@ public class SecuritiesController {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
             @ApiResponse(responseCode = "404", description = "조회 실패")
     })
-    @GetMapping("/accounts/stocks/{accountNumber}")
+    @GetMapping("/accounts/{accountNumber}/stocks")
     public ResponseEntity<?> getAllAccounts(
             @Parameter(description = "조회할 계좌의 번호", required = true)
             @PathVariable String accountNumber
     ) {
-
         List<AllStocksRequestDTO> stocks = securitiesService.getAllStocksByAccountNumber(accountNumber);
 
         return new ResponseEntity<>(stocks, HttpStatus.OK);

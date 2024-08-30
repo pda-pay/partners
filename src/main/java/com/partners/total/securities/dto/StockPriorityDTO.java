@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 public class StockPriorityDTO {
 
-    @Schema(description = "계좌 id", example = "2")
-    private int accountId;
+    @Schema(description = "계좌 번호", example = "2223321-11123-144290")
+    private String accountNumber;
 
     @Schema(description = "증권 수량", example = "1")
     private int quantity;
