@@ -23,12 +23,12 @@ public class SecuritiesService {
 
     private final StockOAuth stockOAuthService;
     private final StockData stockData;
-    private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private final StocksRepository stocksRepository;
 
     private String accessToken = null;
 
+    @Transactional
     public List<AllStocksRequestDTO> getAllStocksByAccountNumber(String accountNumber) {
 
         Account account = accountRepository
@@ -55,10 +55,17 @@ public class SecuritiesService {
     @Transactional
     public Map<String, ?> requestSellStocks(StockPriorityDTO stockPriorityDTO) {
 
+        String accountNumber = stockPriorityDTO.getAccountNumber();
+        String stockCode = stockPriorityDTO.getStockCode();
+
+        Account account = accountRepository
+                .findAccountByAccountNumber(accountNumber)
+                .orElseThrow(() -> new AccountNotFoundException("조회되는 계좌 정보가 없습니다."));
+
         Stocks stocks = stocksRepository
                 .findStocksByAccountIdAndStockCode(
-                        stockPriorityDTO.getAccountId(),
-                        stockPriorityDTO.getStockCode()
+                        account.getId(),
+                        stockCode
                 )
                 .orElseThrow(() -> new StocksNotFoundException("보유중인 증권이 아닙니다. 증권 코드: " + stockPriorityDTO.getStockCode()));
 
@@ -79,8 +86,6 @@ public class SecuritiesService {
         return map;
     }
 
-
-    // 수정 중
     public PreviousPricesDTO getPreviousClosePriceList(StockCodesDTO stockCodesDTO) {
 
         checkoutToken();

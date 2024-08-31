@@ -28,12 +28,11 @@ public class SecuritiesController {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
             @ApiResponse(responseCode = "404", description = "조회 실패")
     })
-    @GetMapping("/accounts/stocks/{accountNumber}")
+    @GetMapping("/accounts/{accountNumber}/stocks")
     public ResponseEntity<?> getAllAccounts(
             @Parameter(description = "조회할 계좌의 번호", required = true)
             @PathVariable String accountNumber
     ) {
-
         List<AllStocksRequestDTO> stocks = securitiesService.getAllStocksByAccountNumber(accountNumber);
 
         return new ResponseEntity<>(stocks, HttpStatus.OK);
