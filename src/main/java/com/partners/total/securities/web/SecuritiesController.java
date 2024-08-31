@@ -1,9 +1,6 @@
 package com.partners.total.securities.web;
 
-import com.partners.total.securities.dto.AllStocksRequestDTO;
-import com.partners.total.securities.dto.PreviousPricesDTO;
-import com.partners.total.securities.dto.StockCodesDTO;
-import com.partners.total.securities.dto.StockPriorityDTO;
+import com.partners.total.securities.dto.*;
 import com.partners.total.securities.service.SecuritiesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -54,14 +51,14 @@ public class SecuritiesController {
         return new ResponseEntity<>(amount, HttpStatus.OK);
     }
 
-    @Operation(summary = "증권 전일 종가 요청", description = "주식 코드 리스트를 받아서 그에 대한 전일 종가를 반환합니다.")
+    @Operation(summary = "증권 리스트 전일 종가 요청", description = "주식 코드 리스트를 받아서 그에 대한 전일 종가를 반환합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "증권 전일 종가 성공"),
             @ApiResponse(responseCode = "204", description = "반환 데이터가 비어 있음"),
             @ApiResponse(responseCode = "400", description = "증권 전일 종가 실패")
     })
     @PostMapping("/stocks")
-    public ResponseEntity<?> getPreviousClosePrice(@RequestBody StockCodesDTO stockCodesDTO) {
+    public ResponseEntity<?> getPreviousClosePrices(@RequestBody StockCodesDTO stockCodesDTO) {
 
         PreviousPricesDTO previousPricesDTO = securitiesService.getPreviousClosePriceList(stockCodesDTO);
 
@@ -70,5 +67,56 @@ public class SecuritiesController {
         }
 
         return new ResponseEntity<>(previousPricesDTO, HttpStatus.OK);
+    }
+
+    @Operation(summary = "단일 증권 전일 종가 요청", description = "주식 코드를 받아서 그에 대한 전일 종가를 반환합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "증권 전일 종가 성공"),
+            @ApiResponse(responseCode = "204", description = "반환 데이터가 비어 있음"),
+            @ApiResponse(responseCode = "400", description = "증권 전일 종가 실패")
+    })
+    @GetMapping("/stocks/{stockCode}")
+    public ResponseEntity<?> getPreviousClosePrice(
+            @Parameter(description = "조회할 증권 코드", required = true)
+            @PathVariable String stockCode
+    ) {
+        PreviousPricesDTO.PreviousPriceDTO previousPriceDTO = securitiesService.getPreviousClosePrice(stockCode);
+
+        return new ResponseEntity<>(previousPriceDTO, HttpStatus.OK);
+    }
+
+    @Operation(summary = "증권 리스트 실시간 가격 요청", description = "주식 코드 리스트를 받아서 그에 대한 실시간 가격을 반환합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "증권 실시간 가격 성공"),
+            @ApiResponse(responseCode = "204", description = "반환 데이터가 비어 있음"),
+            @ApiResponse(responseCode = "400", description = "증권 실시간 가격 실패")
+    })
+    @PostMapping("/stocks/current")
+    public ResponseEntity<?> getCurrentPrices(@RequestBody StockCodesDTO stockCodesDTO) {
+
+        CurrentPricesDTO currentPricesDTO = securitiesService.getCurrentPriceList(stockCodesDTO);
+
+        if (currentPricesDTO.getCurrentPricesDTO().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return new ResponseEntity<>(currentPricesDTO, HttpStatus.OK);
+    }
+
+    @Operation(summary = "단일 증권 실시간 가격 요청", description = "주식 코드를 받아서 그에 대한 실시간 가격을 반환합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "증권 실시간 가격 성공"),
+            @ApiResponse(responseCode = "204", description = "반환 데이터가 비어 있음"),
+            @ApiResponse(responseCode = "400", description = "증권 실시간 가격 실패")
+    })
+    @GetMapping("/stocks/{stockCode}/current")
+    public ResponseEntity<?> getCurrentPrice(
+            @Parameter(description = "조회할 증권 코드", required = true)
+            @PathVariable String stockCode
+    ) {
+
+        CurrentPricesDTO.CurrentPriceDTO currentPriceDTO = securitiesService.getCurrentStockPrice(stockCode);
+
+        return new ResponseEntity<>(currentPriceDTO, HttpStatus.OK);
     }
 }

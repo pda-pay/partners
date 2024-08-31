@@ -94,12 +94,40 @@ public class SecuritiesService {
 
         for (String stockCode : stockCodesDTO.getStockCodes()) {
 
-            ClosePriceDTO closePriceDTO = stockData.fetchClosePriceData(stockCode, accessToken);
+            ClosePriceDTO closePriceDTO = getPreviousPrice(stockCode);
 
             previousPricesDTO.addPreviousDTO(stockCode, closePriceDTO.getOutput1().getStck_prdy_clpr());
         }
 
         return previousPricesDTO;
+    }
+
+    public PreviousPricesDTO.PreviousPriceDTO getPreviousClosePrice(String stockCode) {
+        ClosePriceDTO closePriceDTO = getPreviousPrice(stockCode);
+        int parsedAmount = Integer.parseInt(closePriceDTO.getOutput1().getStck_prdy_clpr());
+
+        return new PreviousPricesDTO.PreviousPriceDTO(stockCode, parsedAmount);
+    }
+
+    public CurrentPricesDTO getCurrentPriceList(StockCodesDTO stockCodesDTO) {
+        checkoutToken();
+
+        CurrentPricesDTO currentPricesDTO = new CurrentPricesDTO();
+
+        for (String stockCode : stockCodesDTO.getStockCodes()) {
+
+            CurrentPriceDTO currentPriceDTO = getCurrentPrice(stockCode);
+            currentPricesDTO.addPreviousDTO(stockCode, currentPriceDTO.getOutput().getStck_prpr());
+        }
+
+        return currentPricesDTO;
+    }
+
+    public CurrentPricesDTO.CurrentPriceDTO getCurrentStockPrice(String stockCode) {
+        CurrentPriceDTO currentPriceDTO = getCurrentPrice(stockCode);
+        int parsedAmount = Integer.parseInt(currentPriceDTO.getOutput().getStck_prpr());
+
+        return new CurrentPricesDTO.CurrentPriceDTO(stockCode, parsedAmount);
     }
 
     @Scheduled(cron = "0 0 0 * * *") // 자정
@@ -111,6 +139,13 @@ public class SecuritiesService {
         if (accessToken == null) {
             getOAuthToken();
         }
+    }
+
+    private ClosePriceDTO getPreviousPrice(String code) {
+
+        checkoutToken();
+
+        return stockData.fetchClosePriceData(code, accessToken);
     }
 
     private CurrentPriceDTO getCurrentPrice(String code) {
