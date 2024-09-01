@@ -47,11 +47,11 @@ public class MydataService {
     }
 
     @Transactional
-    public DepositResponse getDepositByAccountNumber(DepositRequest depositRequest) {
-        final int deposit = accountRepository.findDepositByAccountNumber(depositRequest.getAccountNumber())
+    public AccountForRepaymentResponse getDepositByAccountNumber(DepositRequest depositRequest) {
+        AccountForRepaymentResponse response = accountRepository.findDepositAndCompanyCodeByAccountNumber(depositRequest.getAccountNumber())
                 .orElseThrow(() -> new AccountIdNotFoundException("계좌를 찾지 못했습니다."));
 
-        return new DepositResponse(deposit);
+        return response;
     }
 
     @Transactional
