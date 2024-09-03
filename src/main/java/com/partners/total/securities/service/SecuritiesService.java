@@ -79,7 +79,11 @@ public class SecuritiesService {
 
         stocks.minusQuantity(stockPriorityDTO.getQuantity());
 
-        stocksRepository.save(stocks);
+        if (stocks.getQuantity() == 0) {
+            stocksRepository.delete(stocks);
+        } else {
+            stocksRepository.save(stocks);
+        }
 
         Map<String, Integer> map = new HashMap<>();
         map.put("sellAmount", sellAmount);
