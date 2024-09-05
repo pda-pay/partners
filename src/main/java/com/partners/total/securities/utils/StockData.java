@@ -64,7 +64,7 @@ public class StockData {
             throw new OpenAPIPreviousClosePriceException("전일 종가 가져오기 에러: " + e.getMessage());
         }
 
-        if (response == null) {
+        if (response == null || response.getOutput1().getStck_prdy_clpr().equals("0")) {
             throw new OpenAPIPreviousClosePriceException("전일 종가 가져오기 에러: 받은 데이터가 없습니다");
         }
 
@@ -113,7 +113,7 @@ public class StockData {
             throw new OpenAPICurrentPriceException("현재가 가져오기 에러: " + e.getMessage());
         }
 
-        if (response == null) {
+        if (response == null || response.getOutput().getStck_prpr().equals("0")) {
             throw new OpenAPICurrentPriceException("현재가 가져오기 에러: 받은 데이터가 없습니다.");
         }
 
