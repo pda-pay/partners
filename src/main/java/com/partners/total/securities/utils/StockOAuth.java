@@ -1,9 +1,11 @@
 package com.partners.total.securities.utils;
 
 import com.partners.total.securities.config.WebClientConfig;
+import com.partners.total.securities.exception.openapi.OpenAPIAccessTokenException;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -38,7 +40,7 @@ public class StockOAuth {
                                     .flatMap(errorBody -> {
                                         String errorMessage = String.format("Error: %s, Status Code: %d",
                                                 errorBody, clientResponse.statusCode().value());
-                                        return Mono.error(new RuntimeException(errorMessage));
+                                        return Mono.error(new OpenAPIAccessTokenException(errorMessage, clientResponse.statusCode()));
                                     })
                     )
                     .bodyToMono(OAuthResponse.class)
@@ -47,8 +49,7 @@ public class StockOAuth {
             accessToken = response.getAccessToken(); // 토큰을 전역 변수에 저장
 
         } catch (Exception e) {
-            e.printStackTrace();
-            accessToken = null;
+            throw new OpenAPIAccessTokenException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return accessToken;

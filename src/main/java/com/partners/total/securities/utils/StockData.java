@@ -32,7 +32,7 @@ public class StockData {
 
     public synchronized ClosePriceDTO fetchClosePriceData(String code, String accessToken) {
 
-        ClosePriceDTO response = null;
+        ClosePriceDTO response;
 
         try {
             response = webClient.get()
@@ -56,12 +56,16 @@ public class StockData {
                     .retrieve()
                     .bodyToMono(ClosePriceDTO.class)
                     .onErrorResume(e -> {
-                        throw new OpenAPIPreviousClosePriceException("전일 종가 가져오기 에러");
+                        throw new OpenAPIPreviousClosePriceException("전일 종가 가져오기 에러: " + e.getMessage());
                     })
                     .block();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new OpenAPIPreviousClosePriceException("전일 종가 가져오기 에러: " + e.getMessage());
+        }
+
+        if (response == null) {
+            throw new OpenAPIPreviousClosePriceException("전일 종가 가져오기 에러: 받은 데이터가 없습니다");
         }
 
         return response;
@@ -81,7 +85,7 @@ public class StockData {
 
     public synchronized CurrentPriceDTO fetchCurrentPriceData(String code, String accessToken) {
 
-        CurrentPriceDTO response = null;
+        CurrentPriceDTO response;
 
         try {
             response = webClient.get()
@@ -101,12 +105,16 @@ public class StockData {
                     .retrieve()
                     .bodyToMono(CurrentPriceDTO.class)
                     .onErrorResume(e -> {
-                        throw new OpenAPICurrentPriceException("현재가 가져오기 에러");
+                        throw new OpenAPICurrentPriceException("현재가 가져오기 에러: " + e.getMessage());
                     })
                     .block();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new OpenAPICurrentPriceException("현재가 가져오기 에러: " + e.getMessage());
+        }
+
+        if (response == null) {
+            throw new OpenAPICurrentPriceException("현재가 가져오기 에러: 받은 데이터가 없습니다.");
         }
 
         return response;
