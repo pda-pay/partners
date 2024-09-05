@@ -1,6 +1,7 @@
 package com.partners.total.securities.exception;
 
 import com.partners.total.securities.exception.account.AccountNotFoundException;
+import com.partners.total.securities.exception.openapi.OpenAPIAccessTokenException;
 import com.partners.total.securities.exception.openapi.OpenAPICurrentPriceException;
 import com.partners.total.securities.exception.openapi.OpenAPIPreviousClosePriceException;
 import com.partners.total.securities.exception.stocks.StockSellException;
@@ -14,9 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @RestControllerAdvice
 @Slf4j
-public class GlobalExceptionHandler {
+public class SecuritiesExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ErrorDTO> catchStocksNotFoundException(StocksNotFoundException e) {
@@ -73,16 +77,28 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDTO, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler
+    public ResponseEntity<ErrorDTO> catchOpenAPIAccessTokenException(OpenAPIAccessTokenException e) {
+
+        ErrorDTO errorDTO = ErrorDTO.builder()
+                .message(e.getMessage())
+                .build();
+
+        return new ResponseEntity<>(errorDTO, e.getHttpStatusCode());
+    }
+
     @Getter
     @Setter
-    @Builder
     public static class ErrorDTO {
 
+        private LocalDateTime timestamp;
         private String message;
 
         public ErrorDTO() {}
 
+        @Builder
         public ErrorDTO(String message) {
+            this.timestamp = LocalDateTime.now();
             this.message = message;
         }
     }
