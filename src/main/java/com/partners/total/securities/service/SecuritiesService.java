@@ -134,7 +134,7 @@ public class SecuritiesService {
         return new CurrentPricesDTO.CurrentPriceDTO(stockCode, parsedAmount);
     }
 
-    @Scheduled(cron = "0 0 0 * * *") // 자정
+    @Scheduled(cron = "0 30 23 * * *")
     protected void getOAuthToken() {
         accessToken = stockOAuthService.getAccessToken(accessToken);
     }
