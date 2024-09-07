@@ -3,6 +3,8 @@ package com.partners.total.securities.service;
 import com.partners.total.mydata.domain.*;
 import com.partners.total.securities.dto.*;
 import com.partners.total.securities.exception.account.AccountNotFoundException;
+import com.partners.total.securities.exception.openapi.OpenAPICurrentPriceException;
+import com.partners.total.securities.exception.openapi.OpenAPIPreviousClosePriceException;
 import com.partners.total.securities.exception.stocks.StockSellException;
 import com.partners.total.securities.exception.stocks.StocksNotFoundException;
 import com.partners.total.securities.utils.StockData;
@@ -135,7 +137,7 @@ public class SecuritiesService {
     }
 
     @Scheduled(cron = "0 30 23 * * *")
-    protected void getOAuthToken() {
+    public void getOAuthToken() {
         accessToken = stockOAuthService.getAccessToken(accessToken);
     }
 
@@ -149,13 +151,27 @@ public class SecuritiesService {
 
         checkoutToken();
 
-        return stockData.fetchClosePriceData(code, accessToken);
+        try {
+            return stockData.fetchClosePriceData(code, accessToken);
+
+        } catch (OpenAPIPreviousClosePriceException e) {
+
+            accessToken = stockOAuthService.fetchOAuthToken();
+            return stockData.fetchClosePriceData(code, accessToken);
+        }
     }
 
     private CurrentPriceDTO getCurrentPrice(String code) {
 
         checkoutToken();
 
-        return stockData.fetchCurrentPriceData(code, accessToken);
+        try {
+            return stockData.fetchCurrentPriceData(code, accessToken);
+
+        } catch (OpenAPICurrentPriceException e) {
+
+            accessToken = stockOAuthService.fetchOAuthToken();
+            return stockData.fetchCurrentPriceData(code, accessToken);
+        }
     }
 }
