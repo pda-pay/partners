@@ -206,7 +206,7 @@ public class MydataService {
         for (int i = 0; i < count; i++) {
             int randomIndex = random.nextInt(availableStockCodes.size());
             String stockCode = availableStockCodes.remove(randomIndex);
-            int quantity = random.nextInt(191) + 10;
+            int quantity = random.nextInt(10) + 1;
 
             Stocks fakeStock = new Stocks(quantity, account, stockCode);
             stocksList.add(fakeStock);
